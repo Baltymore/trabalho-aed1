@@ -1,0 +1,80 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define max 50
+
+typedef struct amigo
+{
+    char nome [max];
+    int celular;
+    char email[max];
+    struct amigo *prox;
+} Amigo;
+
+typedef struct deslocamento
+{
+    char cidadeOrigem[max];
+    char cidadeDestino[max];
+    char estadoOrigem[max];
+    char estadoDestino[max];
+    char paisOrigem[max];
+    char paisDestino[max];
+    struct deslocamento *prox;
+} Deslocamento;
+
+void inicia(amigo *lista_A) // retorna a lista vazia
+{
+    lista_A->prox = NULL;
+}
+
+int vazia(amigo *lista_A) // verifica se a lista é vazia
+{
+    if(lista_A->prox == NULL)
+        return 1;
+    else
+        return 0;
+}
+
+void *insereAmigoFim(Amigo *lista_A)
+{
+    Amigo *novo=(Amigo *) malloc(sizeof(Amigo));
+    if(!novo)
+    {
+        printf("Sem memoria disponivel!\n");
+        exit(1);
+    }
+    printf("Novo Amigo: ");// preeenche a estrutura "novo"
+    gets(novo->nome);      //
+    printf("\nNovo Numero: "); //
+    scanf("%d",&novo->celular); //
+    printf("\nNovo Email: "); //
+    gets(novo->email);     //
+    novo->prox = NULL;    //
+
+    if(vazia(LISTA))// se a lista for vazia põe no começo
+        lista_A->prox=novo;
+    else
+    {
+        Amigo *tmp = lista_A->prox;
+        while(tmp->prox != NULL)
+            tmp = tmp->prox;
+        tmp->prox = novo;
+    }
+}
+
+void esquerve_em_arquivo (Amigo *lista_A) //função que grava em arquivo o no da lista
+{                                         //chamar em seguida logo apos criar um novo noh
+    int ret;
+    FILE *arq;
+    arq = fopen("Amigos.txt", "wb");
+    if (arq != NULL) {
+        ret = fwrite(lista_A, sizeof(Amigo),1, arq);
+        if (ret == 1)
+            printf("Gravacao %d registros com sucesso\n", ret);
+        else
+            printf("Foram gravados apenas %d elementos\n", ret);
+        fclose(arq);
+    }
+    else
+        puts("Erro: abertura do arquivo");
+}
